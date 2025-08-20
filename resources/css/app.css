@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-modal {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 500px;
+    max-width: 90%;
+    margin: 40px auto;
+  }
+  
+  .custom-button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .custom-button-cancel {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .custom-button:hover {
+    background-color: #3e8e41;
+  }
+  
+  .custom-button-cancel:hover {
+    background-color: #c0392b;
+  }
+  
+  .custom-button:active {
+    transform: translateY(2px);
+  }
+  
+  .custom-button-cancel:active {
+    transform: translateY(2px);
+  }
