@@ -63,7 +63,7 @@ class ProductCreatedMail extends Mailable implements ShouldQueue
         Log::debug('User ID: ' . $this->user->id);
 
         return new Content(
-            view: 'mail.product-created-mail',
+            markdown: 'emails.product-created-mail',
             with: [
                 'product' => $this->product,
                 'user' => $this->user,
