@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Mail\ProductCreatedMail;
 use App\Mail\EmailFailureAlert;
+use App\Mail\ProductCreatedMail;
 use App\Models\Product;
 use App\Models\User;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -18,11 +18,17 @@ use Illuminate\Support\Facades\Mail;
 
 class SendProductAddedMail implements ShouldQueue
 {
-    use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public Product $product;
+
     public User $user;
+
     public array $recipients;
+
     public array $ccRecipients;
 
     public int $tries = 3;
@@ -76,7 +82,7 @@ class SendProductAddedMail implements ShouldQueue
 
             $mail = Mail::to($this->recipients);
 
-            if (!empty($this->ccRecipients)) {
+            if (! empty($this->ccRecipients)) {
                 $mail->cc($this->ccRecipients);
             }
 
@@ -87,8 +93,8 @@ class SendProductAddedMail implements ShouldQueue
                     $report->setMetaData([
                         'product' => [
                             'id' => $this->product->id,
-                            'name' => $this->product->name
-                        ]
+                            'name' => $this->product->name,
+                        ],
                     ]);
                 });
             }
@@ -151,8 +157,8 @@ class SendProductAddedMail implements ShouldQueue
         return [
             'email',
             'Product-created',
-            'product:' . $this->product->id,
-            'user:' . $this->user->id,
+            'product:'.$this->product->id,
+            'user:'.$this->user->id,
         ];
     }
 }

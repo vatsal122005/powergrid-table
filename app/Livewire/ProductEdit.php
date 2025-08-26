@@ -10,18 +10,31 @@ use Livewire\WithFileUploads;
 class ProductEdit extends Component
 {
     use WithFileUploads;
+
     public $product;
+
     public $name;
+
     public $description;
+
     public $price;
+
     public $stock_quantity;
+
     public $category_id;
+
     public $status = 'active';
+
     public $sku;
+
     public $image_url;
+
     public $meta_title;
+
     public $meta_description;
+
     public $image;
+
     public $categories;
 
     protected function rules()
@@ -33,16 +46,16 @@ class ProductEdit extends Component
             'stock_quantity' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|in:active,inactive,draft',
-            'sku' => 'nullable|string|max:100|unique:products,sku,' . $this->product->id,
+            'sku' => 'nullable|string|max:100|unique:products,sku,'.$this->product->id,
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:1024',
         ];
     }
 
-
     public function mount($id)
     {
+        // $this->authorize('update', Product::find($id));
         $this->categories = Category::all();
         $this->product = Product::findOrFail($id);
         $this->name = $this->product->name;

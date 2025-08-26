@@ -9,7 +9,6 @@ use App\Models\Task;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
@@ -45,7 +44,7 @@ class TaskController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Tasks retrieved successfully',
-            'data' => TaskResource::collection($tasks)
+            'data' => TaskResource::collection($tasks),
         ], 200);
     }
 
@@ -91,8 +90,8 @@ class TaskController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Task ' . $task->id . ' retrieved successfully',
-                'data' => $tasks
+                'message' => 'Task '.$task->id.' retrieved successfully',
+                'data' => $tasks,
             ], 200);
         } catch (Exception $e) {
             Log::error('Failed to retrieve task', ['task_id' => $task->id, 'error' => $e->getMessage()]);
@@ -112,6 +111,7 @@ class TaskController extends Controller
     {
         try {
             $task->update($request->validated());
+
             return response()->json([
                 'success' => true,
                 'message' => 'Task updated successfully',
@@ -119,6 +119,7 @@ class TaskController extends Controller
             ], 200);
         } catch (Exception $e) {
             Log::error('Failed to update task', ['error' => $e->getMessage()]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update task',
@@ -134,12 +135,14 @@ class TaskController extends Controller
     {
         try {
             $task->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Task deleted successfully',
             ], 200);
         } catch (Exception $e) {
             Log::error('Failed to delete task', ['error' => $e->getMessage()]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete task',

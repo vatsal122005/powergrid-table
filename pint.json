@@ -1,0 +1,23 @@
+{
+    "preset": "psr12",
+    "rules": {
+        "no_unused_imports": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "single_quote": true,
+        "braces": true,
+        "no_extra_blank_lines": true,
+        "ordered_imports": true,
+        "trailing_comma_in_multiline": true,
+        "no_whitespace_in_blank_line": true,
+        "blank_line_after_namespace": true,
+        "blank_line_after_opening_tag": true,
+        "no_leading_import_slash": true,
+        "no_singleline_whitespace_before_semicolons": true
+    },
+    "exclude": [
+        "vendor",
+        "storage"
+    ]
+}

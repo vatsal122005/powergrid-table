@@ -6,7 +6,6 @@ use App\Models\Product;
 use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,10 +13,13 @@ use Illuminate\Queue\SerializesModels;
 
 class EmailFailureAlert extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     private Product $product;
+
     private User $user;
+
     private Exception $exception;
 
     public function __construct(Product $product, User $user, Exception $exception)

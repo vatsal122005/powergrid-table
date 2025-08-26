@@ -38,11 +38,11 @@ return [
     'recaptcha' => [
         'site_key' => env('RECAPTCHA_SITE_KEY'),
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+        'bypass_for_dusk' => env('RECAPTCHA_BYPASS_DUSK', false),
     ],
 
     'bugsnag' => [
         'api_key' => env('BUGSNAG_API_KEY'),
     ],
-
 
 ];

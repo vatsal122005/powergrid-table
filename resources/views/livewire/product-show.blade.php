@@ -1,5 +1,25 @@
 <div class="max-w-3xl mx-auto py-10">
     <div class="bg-white shadow rounded-lg p-8">
+        @cannot('view', $product)
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ session('error') ?? __('messages.unauthorized') }}
+                <div class="text-sm mt-2">
+                    Redirecting to products table in <span id="redirect-timer">5</span> seconds...
+                </div>
+            </div>
+            <script>
+                let seconds = 5;
+                const timer = document.getElementById('redirect-timer');
+                const interval = setInterval(() => {
+                    seconds--;
+                    if (timer) timer.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        window.location.href = "{{ route('products') }}";
+                    }
+                }, 1000);
+            </script>
+        @else
         @if(session()->has('message'))
             <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
                 {{ session('message') }}
@@ -63,5 +83,6 @@
         <div class="mt-8 flex justify-end">
             <a href="{{ route('products.edit', $product->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit Product</a>
         </div>
+        @endcannot
     </div>
 </div>

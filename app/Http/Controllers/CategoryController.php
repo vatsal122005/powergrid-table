@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Stmt\Finally_;
 
 class CategoryController extends Controller
 {
@@ -33,8 +33,8 @@ class CategoryController extends Controller
                 // Check again inside lock
                 $categories = Cache::get($cacheKey);
 
-                if (!$categories) {
-                    Log::info('Cache miss - fetching from database...');
+                if (! $categories) {
+                    Log::info(__('messages.cache_miss_fetching_db'));
                     sleep(2); // simulate heavy DB operation
 
                     // Fetch fresh data
@@ -44,15 +44,15 @@ class CategoryController extends Controller
                     Cache::put($cacheKey, $categories, $ttl);
                     Log::info("Categories stored in cache for {$ttl} seconds.");
                 } else {
-                    Log::info('Cache hit (inside lock).');
+                    Log::info(__('messages.cache_hit_inside_lock'));
                 }
             } finally {
                 $lock->release();
-                Log::info('Lock released.');
+                Log::info(__('messages.lock_released'));
             }
         } else {
             // If another process has the lock, wait for it
-            Log::info('Another process rebuilding cache - waiting...');
+            Log::info(__('messages.another_process_waiting'));
             $lock->block($lockSeconds);
             $categories = Cache::get($cacheKey);
         }
@@ -80,36 +80,36 @@ class CategoryController extends Controller
     {
         // Not needed for API, but could return a form or structure if required
         return response()->json([
-            'message' => 'Display form for creating a new category (not implemented for API).'
+            'message' => 'Display form for creating a new category (not implemented for API).',
         ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        // Validate the request
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-            'description' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:categories,slug',
-            'is_active' => 'required|boolean',
-            'sort_order' => 'required|integer',
-            // Add other fields as necessary
-        ]);
+        try {
+            // Create the category
+            $category = Category::create($request->all());
 
-        // Create the category
-        $category = Category::create($validated);
+            // Optionally clear the cache so the new category appears in the list
+            Cache::forget('categories.all');
 
-        // Optionally clear the cache so the new category appears in the list
-        Cache::forget('categories.all');
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.category_created'),
+                'category' => $category,
+            ], 201);
+        } catch (Exception $e) {
+            Log::error(__('messages.category_create_failed'), ['error' => $e->getMessage()]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category created successfully.',
-            'category' => $category
-        ], 201);
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.category_create_failed'),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -117,34 +117,43 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $categories = Cache::get('categories.all');
-        $cacheKey = "categories.{$id}";
+        try {
+            $categories = Cache::get('categories.all');
+            $cacheKey = "categories.{$id}";
 
-        if (!$categories) {
-            $categories = Category::all();
-            Cache::put('categories.all', $categories, 60);
-            $source = 'database';
-        } else {
-            $source = 'cache';
-        }
+            if (! $categories) {
+                $categories = Category::all();
+                Cache::put('categories.all', $categories, 60);
+                $source = 'database';
+            } else {
+                $source = 'cache';
+            }
 
-        $category = $categories->where('id', $id)->first();
+            $category = $categories->where('id', $id)->first();
 
-        if (!$category) {
+            if (! $category) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.category_not_found'),
+                ], 404);
+            }
+
+            return response()->json([
+                'source' => $source,
+                'success' => true,
+                'message' => __('messages.category_list_retrieved'),
+                'category' => $category,
+            ], 200);
+        } catch (Exception $e) {
+            Log::error(__('messages.category_not_found'), ['error' => $e->getMessage()]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Category not found.',
-            ], 404);
+                'message' => __('messages.category_not_found'),
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json([
-            'source' => $source,
-            'success' => true,
-            'message' => 'Category retrieved successfully.',
-            'category' => $category
-        ], 200);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -154,35 +163,37 @@ class CategoryController extends Controller
         // Not needed for API, but could return a form or structure if required
         return response()->json([
             'message' => 'Display form for editing the category (not implemented for API).',
-            'category' => $category
+            'category' => $category,
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
-        // Validate the request
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $category->id,
-            'description' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|max:255|unique:categories,slug,' . $category->id,
-            'is_active' => 'sometimes|required|boolean',
-            'sort_order' => 'sometimes|required|integer',
-            // Add other fields as necessary
-        ]);
+        try {
+            $validatedData = $request->validated();
 
-        $category->update($validated);
+            $category->update($validatedData);
 
-        // Optionally clear the cache so the updated category appears in the list
-        Cache::forget('categories.all');
+            // Optionally clear the cache so the updated category appears in the list
+            Cache::forget('categories.all');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category updated successfully.',
-            'category' => $category
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.category_updated'),
+                'category' => $category,
+            ], 200);
+        } catch (Exception $e) {
+            Log::error(__('messages.category_update_failed'), ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.category_update_failed'),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -190,14 +201,24 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category->delete();
+        try {
+            $category->delete();
 
-        // Optionally clear the cache so the deleted category is removed from the list
-        Cache::forget('categories.all');
+            // Optionally clear the cache so the deleted category is removed from the list
+            Cache::forget('categories.all');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category deleted successfully.'
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.category_deleted'),
+            ], 200);
+        } catch (Exception $e) {
+            Log::error(__('messages.category_delete_failed'), ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.category_delete_failed'),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

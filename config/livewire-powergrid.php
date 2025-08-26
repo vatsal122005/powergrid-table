@@ -65,10 +65,10 @@ return [
              * https://tom-select.js.org
              */
             'tom' => [
-                'multiple'=> 'true',
+                'multiple' => 'true',
                 'plugins' => [
                     'remove_button' => ['title' => 'Remove this item'],
-                    'clear_button'  => ['title' => 'Clear all selections'],
+                    'clear_button' => ['title' => 'Clear all selections'],
                 ],
             ],
 

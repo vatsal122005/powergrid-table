@@ -9,6 +9,7 @@
         "php": "^8.2",
         "bugsnag/bugsnag-laravel": "^2.29",
         "laravel/framework": "^12.0",
+        "laravel/passport": "^13.1",
         "laravel/pulse": "^1.4",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
@@ -22,15 +23,23 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
+        "beyondcode/laravel-query-detector": "*",
         "fakerphp/faker": "^1.23",
+        "friendsofphp/php-cs-fixer": "*",
+        "itsgoingd/clockwork": "^5.3",
         "laravel/breeze": "^2.3",
+        "laravel/dusk": "^8.3",
         "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.13",
+        "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
         "laravel/telescope": "^5.11",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "nunomaduro/larastan": "^3.6",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5.3",
+        "squizlabs/php_codesniffer": "*",
+        "vimeo/psalm": "^6.13"
     },
     "autoload": {
         "psr-4": {

@@ -22,7 +22,7 @@ class Category extends Model
 
     protected $attributes = [
         'is_active' => true,
-        'sort_order' => 0
+        'sort_order' => 0,
     ];
 
     public function products()

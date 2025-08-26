@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Log;
 
 class ProductCreatedMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Product $product;
+
     public User $user;
 
     /**
@@ -25,8 +27,8 @@ class ProductCreatedMail extends Mailable implements ShouldQueue
     public function __construct(Product $product, User $user)
     {
         Log::info('Creating new ProductCreatedMail instance');
-        Log::info('Product ID: ' . $product->id);
-        Log::info('User ID: ' . $user->id);
+        Log::info('Product ID: '.$product->id);
+        Log::info('User ID: '.$user->id);
 
         $this->product = $product;
         $this->user = $user;
@@ -38,15 +40,15 @@ class ProductCreatedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         Log::debug('Creating envelope for ProductCreatedMail');
-        Log::debug('Product ID: ' . $this->product->id);
-        Log::debug('User ID: ' . $this->user->id);
+        Log::debug('Product ID: '.$this->product->id);
+        Log::debug('User ID: '.$this->user->id);
 
         return new Envelope(
             subject: 'Product Created Mail',
             tags: ['product-created'],
             metadata: [
                 'product_id' => $this->product->id,
-                'user_id' => $this->user->id
+                'user_id' => $this->user->id,
             ],
         );
     }
@@ -57,14 +59,14 @@ class ProductCreatedMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         Log::debug('Creating content for ProductCreatedMail');
-        Log::debug('Product ID: ' . $this->product->id);
-        Log::debug('User ID: ' . $this->user->id);
+        Log::debug('Product ID: '.$this->product->id);
+        Log::debug('User ID: '.$this->user->id);
 
         return new Content(
             view: 'mail.product-created-mail',
             with: [
                 'product' => $this->product,
-                'user' => $this->user
+                'user' => $this->user,
             ]
         );
     }

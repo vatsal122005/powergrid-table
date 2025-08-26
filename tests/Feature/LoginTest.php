@@ -3,26 +3,26 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 use Mockery;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
-
     private User $user;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt('password123'),
         ]);
 
@@ -346,7 +346,7 @@ class LoginTest extends TestCase
         Http::fake([
             'https://www.google.com/recaptcha/api/siteverify' => Http::response([
                 'success' => true,
-                'score' => 0.8,
+                'score' => 0.5,
             ], 200),
         ]);
 

@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('login', function (Request $request) {
-            $key = 'Login: ' . ($request->user()?->id ?? $request->ip());
+            $key = 'Login: '.($request->user()?->id ?? $request->ip());
+
             return [
                 Limit::perMinute(5)->by($key)->response(function () {
                     return response()->json([
@@ -74,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
                         });
                 }
             }
+
             return Limit::perMinute(1)
                 ->by($request->ip())
                 ->response(function () {
@@ -83,5 +86,9 @@ class AppServiceProvider extends ServiceProvider
                     ], 429);
                 });
         });
+
+        // Gate::define('edit-product', function ($user, $product) {
+        //     return $user->id === $product->user_id;
+        // });
     }
 }
