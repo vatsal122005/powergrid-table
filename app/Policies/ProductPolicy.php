@@ -58,8 +58,6 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        Log::info('ProductPolicy::view called with user: ' . $user->id . ' and product: ' . $product->id);
-
         if ($this->isSuperAdmin($user) || $this->isAdmin($user)) {
             return Response::allow();
         }
@@ -76,8 +74,6 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        Log::info('ProductPolicy::create called with user: ' . $user->id);
-
         if ($this->isSuperAdmin($user) || $this->isAdmin($user) || $this->isNormalUser($user)) {
             Log::info('ProductPolicy::create allows user: ' . $user->id);
 
@@ -94,8 +90,6 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        Log::info("ProductPolicy::update called with current user id: {$user->id}, product owner user id: {$product->user_id}");
-
         if ($this->isSuperAdmin($user) || $this->isAdmin($user)) {
             return Response::allow();
         }
@@ -112,8 +106,6 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        Log::info('ProductPolicy::delete called with user: ' . $user->id . ' and product: ' . $product->id);
-
         if ($this->isSuperAdmin($user)) {
             return Response::allow();
         }

@@ -20,8 +20,6 @@ final class ProductTable extends PowerGridComponent
 {
     use WithExport;
 
-    public $realprimarykey = 'id'; // Define the real primary key
-
     public string $tableName = 'product-table';
 
     public function setUp(): array
@@ -35,9 +33,9 @@ final class ProductTable extends PowerGridComponent
             PowerGrid::exportable('products_export')
                 ->striped()
                 ->columnWidth([3 => 30])
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV)
                 ->queues(1)
-                ->onQueue('default'),
+                ->onQueue('default')
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             PowerGrid::header()
                 ->showSearchInput()
                 ->includeViewOnTop('livewire.product-table-header'),
@@ -110,10 +108,10 @@ final class ProductTable extends PowerGridComponent
                     return '<span title="Barcode generation failed">' . __('messages.barcode_not_found') . '</span>';
                 }
             })
-            ->add('image_url', fn ($product) => $product->image_url
+            ->add('image_url', fn($product) => $product->image_url
                 ? '<img src="' . e(asset('storage/' . e($product->image_url))) . '" alt="Product Image" style="max-width:60px;max-height:60px;border-radius:6px;">'
                 : '')
-            ->add('meta_title', fn ($p) => e($p->meta_title))
+            ->add('meta_title', fn($p) => e($p->meta_title))
             ->add('meta_description_excerpt', function ($product) {
                 $excerpt = str(e($product->meta_description))->limit(20);
                 $full = e($product->meta_description);
@@ -187,7 +185,7 @@ final class ProductTable extends PowerGridComponent
                 ->dataSource(
                     \App\Models\Category::query()
                         ->get()
-                        ->map(fn ($cat) => ['id' => $cat->id, 'name' => $cat->name])
+                        ->map(fn($cat) => ['id' => $cat->id, 'name' => $cat->name])
                         ->toArray()
                 )
                 ->optionValue('id')
@@ -392,35 +390,28 @@ final class ProductTable extends PowerGridComponent
         dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 
         dark:text-pg-primary-300 dark:bg-pg-primary-700';
 
-        $user = auth()->guard()->user();
-        $buttons = [];
-
-        if ($user->can('update', $row)) {
-            $buttons[] = Button::add('edit')
+        return [
+            // Show all action buttons to all users
+            Button::add('edit')
                 ->slot('<i class="fas fa-edit"></i> Edit')
                 ->class($buttonClass . ' text-blue-600 hover:text-blue-800')
-                ->dispatch('edit', ['rowId' => $row->id]);
-        }
+                ->dispatch('edit', ['rowId' => $row->id]),
 
-        if ($user->can('view', $row)) {
-            $buttons[] = Button::add('show')
+            Button::add('show')
                 ->slot('<i class="fas fa-eye"></i> Show')
                 ->class($buttonClass . ' text-green-600 hover:text-green-800')
-                ->dispatch('show', ['rowId' => $row->id]);
-        }
+                ->dispatch('show', ['rowId' => $row->id]),
 
-        if ($user->can('delete', $row)) {
-            $buttons[] = Button::add('delete')
+            Button::add('delete')
                 ->slot('<i class="fas fa-trash"></i> Delete')
                 ->class($buttonClass . ' text-red-600 hover:text-red-800')
-                ->dispatch('delete', ['rowId' => $row->id]);
-        }
+                ->dispatch('delete', ['rowId' => $row->id]),
 
-        $buttons[] = Button::add('download')
-            ->slot('<i class="fas fa-download"></i> Download Image')
-            ->class($buttonClass . ' text-indigo-600 hover:text-indigo-800')
-            ->dispatch('download', ['rowId' => $row->id]);
-
-        return $buttons;
+            // Always safe action
+            Button::add('download')
+                ->slot('<i class="fas fa-download"></i> Download Image')
+                ->class($buttonClass . ' text-indigo-600 hover:text-indigo-800')
+                ->dispatch('download', ['rowId' => $row->id]),
+        ];
     }
 }
