@@ -19,7 +19,7 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::middleware(['auth'])->prefix('products')->name('products.')->group(function () {
     Route::get('/create', ProductForm::class)->name('create');

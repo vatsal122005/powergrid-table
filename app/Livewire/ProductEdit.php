@@ -46,7 +46,7 @@ class ProductEdit extends Component
             'stock_quantity' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|in:active,inactive,draft',
-            'sku' => 'nullable|string|max:100|unique:products,sku,'.$this->product->id,
+            'sku' => 'nullable|string|max:100|unique:products,sku,' . $this->product->id,
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:1024',

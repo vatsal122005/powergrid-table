@@ -58,7 +58,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        Log::info('ProductPolicy::view called with user: '.$user->id.' and product: '.$product->id);
+        Log::info('ProductPolicy::view called with user: ' . $user->id . ' and product: ' . $product->id);
 
         if ($this->isSuperAdmin($user) || $this->isAdmin($user)) {
             return Response::allow();
@@ -76,15 +76,15 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        Log::info('ProductPolicy::create called with user: '.$user->id);
+        Log::info('ProductPolicy::create called with user: ' . $user->id);
 
         if ($this->isSuperAdmin($user) || $this->isAdmin($user) || $this->isNormalUser($user)) {
-            Log::info('ProductPolicy::create allows user: '.$user->id);
+            Log::info('ProductPolicy::create allows user: ' . $user->id);
 
             return Response::allow();
         }
 
-        Log::info('ProductPolicy::create denies user: '.$user->id);
+        Log::info('ProductPolicy::create denies user: ' . $user->id);
 
         return Response::deny(__('messages.unauthorized'));
     }
@@ -112,7 +112,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        Log::info('ProductPolicy::delete called with user: '.$user->id.' and product: '.$product->id);
+        Log::info('ProductPolicy::delete called with user: ' . $user->id . ' and product: ' . $product->id);
 
         if ($this->isSuperAdmin($user)) {
             return Response::allow();

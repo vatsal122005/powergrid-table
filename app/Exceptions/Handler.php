@@ -25,7 +25,7 @@ class Handler extends ExceptionHandler
 
             return redirect()->guest(route('login'));
         } catch (Exception $e) {
-            Log::error('Failed to handle unauthenticated user: '.$e->getMessage());
+            Log::error('Failed to handle unauthenticated user: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,

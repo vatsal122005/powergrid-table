@@ -69,7 +69,7 @@ class ProductForm extends Component
             // Get user_id from session (authenticated user)
             $user = auth()->guard()->user();
             if (! $user) {
-                session()->flash('error', __('messages.product_create_failed').' '.__('messages.unauthenticated'));
+                session()->flash('error', __('messages.product_create_failed') . ' ' . __('messages.unauthenticated'));
 
                 return;
             }
@@ -103,16 +103,16 @@ class ProductForm extends Component
                     [$user->email],
                     []
                 );
-                Log::info('ProductCreatedMail sent successfully to '.$user->email);
+                Log::info('ProductCreatedMail sent successfully to ' . $user->email);
             } catch (\Exception $mailException) {
                 // Optionally log or handle mail sending failure
-                Log::error('Failed to send ProductCreatedMail: '.$mailException->getMessage());
+                Log::error('Failed to send ProductCreatedMail: ' . $mailException->getMessage());
             }
 
             session()->flash('message', __('messages.product_created'));
             $this->resetForm();
         } catch (\Exception $e) {
-            session()->flash('error', __('messages.product_create_failed').' '.$e->getMessage());
+            session()->flash('error', __('messages.product_create_failed') . ' ' . $e->getMessage());
         }
     }
 

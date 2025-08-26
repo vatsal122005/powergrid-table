@@ -93,7 +93,7 @@ class RegistrationTest extends DuskTestCase
         Log::info('Starting test: user_can_register_with_valid_credentials');
 
         // Generate a random email for this test run
-        $randomEmail = 'test'.uniqid().'@example.com';
+        $randomEmail = 'test' . uniqid() . '@example.com';
 
         $this->browse(function (Browser $browser) use ($randomEmail) {
             Log::info('Visiting register page');

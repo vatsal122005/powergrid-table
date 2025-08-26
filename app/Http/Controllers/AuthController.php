@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        logger()->info('Registering user with email: '.$request->email);
+        logger()->info('Registering user with email: ' . $request->email);
         $request->validate([
             'name' => 'required|min:3',
             'email' => 'required|email|unique:users',
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        logger()->info('Attempting login for email: '.$request->email);
+        logger()->info('Attempting login for email: ' . $request->email);
 
         $request->validate([
             'email' => 'required|email',
@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         try {
             if (! $user || ! Hash::check($request->password, $user->password)) {
-                logger()->warning('Login failed for email: '.$request->email.' due to invalid credentials');
+                logger()->warning('Login failed for email: ' . $request->email . ' due to invalid credentials');
 
                 return response()->json([
                     'success' => false,
@@ -68,7 +68,7 @@ class AuthController extends Controller
                 ], 401);
             }
         } catch (RuntimeException $e) {
-            logger()->error('Login failed for email: '.$request->email.' due to password hash error: '.$e->getMessage());
+            logger()->error('Login failed for email: ' . $request->email . ' due to password hash error: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -84,7 +84,7 @@ class AuthController extends Controller
         $refreshTokenResult = $user->createToken('auth_refresh_token');
         $refreshToken = $refreshTokenResult->accessToken;
 
-        logger()->info('User logged in successfully, token and refresh token created for email: '.$request->email);
+        logger()->info('User logged in successfully, token and refresh token created for email: ' . $request->email);
 
         return response()->json([
             'success' => true,
@@ -97,14 +97,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        logger()->info('Attempting logout for user: '.$request->user()->email);
+        logger()->info('Attempting logout for user: ' . $request->user()->email);
 
         // ✅ Revoke all Passport tokens
         $request->user()->tokens->each(function ($token) {
             $token->revoke();
         });
 
-        logger()->info('User logged out successfully, tokens revoked for email: '.$request->user()->email);
+        logger()->info('User logged out successfully, tokens revoked for email: ' . $request->user()->email);
 
         return response()->json([
             'success' => true,

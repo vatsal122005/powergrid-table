@@ -31,7 +31,7 @@ class SendDailyEmails extends Command
     {
         $users = User::with('product')->get();
 
-        $this->info('Preparing to send daily summary emails to '.$users->count().' users.');
+        $this->info('Preparing to send daily summary emails to ' . $users->count() . ' users.');
 
         foreach ($users as $user) {
             try {
@@ -45,6 +45,6 @@ class SendDailyEmails extends Command
             }
         }
 
-        $this->info('Daily Summary Emails Dispatched for '.$users->count().' Users.');
+        $this->info('Daily Summary Emails Dispatched for ' . $users->count() . ' Users.');
     }
 }

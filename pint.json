@@ -14,7 +14,10 @@
         "blank_line_after_namespace": true,
         "blank_line_after_opening_tag": true,
         "no_leading_import_slash": true,
-        "no_singleline_whitespace_before_semicolons": true
+        "no_singleline_whitespace_before_semicolons": true,
+        "concat_space": {
+            "spacing": "one"
+        }
     },
     "exclude": [
         "vendor",

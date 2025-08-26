@@ -30,7 +30,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to '.config('app.name').'!',
+            subject: 'Welcome to ' . config('app.name') . '!',
             from: config('mail.from.address'),
             replyTo: config('mail   .from.address'),
         );

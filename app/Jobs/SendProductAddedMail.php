@@ -157,8 +157,8 @@ class SendProductAddedMail implements ShouldQueue
         return [
             'email',
             'Product-created',
-            'product:'.$this->product->id,
-            'user:'.$this->user->id,
+            'product:' . $this->product->id,
+            'user:' . $this->user->id,
         ];
     }
 }
