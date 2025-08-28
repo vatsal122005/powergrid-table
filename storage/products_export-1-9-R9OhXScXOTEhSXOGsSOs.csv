@@ -1,0 +1,10 @@
+﻿Id,Name,Description,Price,"Stock quantity",Category,Status,Sku,"Meta title","Meta Description","User Name","Created at"
+96,"Levi's Men's Jean","Levi's Men's Jean",2300.00,25,Fashion,active,LEVI-MEN-JEA-523,"Levi's Men's Jean","Levi's Men's Jean","Vatsal Lankapati",2025-08-26T04:33:23.000000Z
+97,"Smart Watch","Smart Watch",325.00,102,Lifestyle,active,SMA-WAT-421,"Smart Watch","Smart Watch","Vatsal Lankapati",2025-08-26T04:37:24.000000Z
+98,"Sports Shoes","Sports Shoes",236.00,1023,Sports,active,SPO-SHO-541,"Sports Shoes","Sports Shoes","Vatsal Lankapati",2025-08-26T04:38:40.000000Z
+99,"Mango Tree","Mango Tree",452.00,1236,Environment,active,MAN-TRE-652,"Mango Tree","Mango Tree","Vatsal Lankapati",2025-08-26T04:42:38.000000Z
+100,"Smart Coffee Maker","Programmable coffee maker with app control",9999.99,45,Business,active,SMA-COF-MAK-369,"Smart Coffee Maker","Brew coffee your way.","Vatsal Lankapati",2025-08-26T04:48:36.000000Z
+101,"Smart Water Bottle","Water bottle with hydration tracking and notifications",421.00,235,Technology,active,SMA-WAT-BOT-682,"Smart Water Bottle","Stay hydrated throughout the day.","Vatsal Lankapati",2025-08-26T04:56:31.000000Z
+102,Piano,Piano,20153.00,12,Music,active,PIA-52,Piano,Piano,"Vatsal Lankapati",2025-08-26T05:04:40.000000Z
+103,"Marianda Mazza","Marianda Mazza",120.00,852,Food,active,MAR-MAZ-234,"Marianda Mazza","Marianda Mazza","Vatsal Lankapati",2025-08-26T05:08:15.000000Z
+104,"Travel Suitcase","Travel Suitcase",4120.00,12,Travel,active,TRA-SUI-753,"Travel Suitcase","Travel Suitcase","Vatsal Lankapati",2025-08-26T05:11:01.000000Z

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -390,28 +392,38 @@ final class ProductTable extends PowerGridComponent
         dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 
         dark:text-pg-primary-300 dark:bg-pg-primary-700';
 
-        return [
-            // Show all action buttons to all users
-            Button::add('edit')
+        $buttons = [];
+
+        $user = auth()->user(); // no guard() needed unless you use custom guards
+
+        // ✅ Only run authorization if a user exists
+        if ($user && $user->can('update', $row)) {
+            $buttons[] = Button::add('edit')
                 ->slot('<i class="fas fa-edit"></i> Edit')
                 ->class($buttonClass . ' text-blue-600 hover:text-blue-800')
-                ->dispatch('edit', ['rowId' => $row->id]),
+                ->dispatch('edit', ['rowId' => $row->id]);
+        }
 
-            Button::add('show')
+        if ($user && $user->can('view', $row)) {
+            $buttons[] = Button::add('show')
                 ->slot('<i class="fas fa-eye"></i> Show')
                 ->class($buttonClass . ' text-green-600 hover:text-green-800')
-                ->dispatch('show', ['rowId' => $row->id]),
+                ->dispatch('show', ['rowId' => $row->id]);
+        }
 
-            Button::add('delete')
+        if ($user && $user->can('delete', $row)) {
+            $buttons[] = Button::add('delete')
                 ->slot('<i class="fas fa-trash"></i> Delete')
                 ->class($buttonClass . ' text-red-600 hover:text-red-800')
-                ->dispatch('delete', ['rowId' => $row->id]),
+                ->dispatch('delete', ['rowId' => $row->id]);
+        }
 
-            // Always safe action
-            Button::add('download')
-                ->slot('<i class="fas fa-download"></i> Download Image')
-                ->class($buttonClass . ' text-indigo-600 hover:text-indigo-800')
-                ->dispatch('download', ['rowId' => $row->id]),
-        ];
+        // ✅ Always include "Download" (needed for exports to succeed)
+        $buttons[] = Button::add('download')
+            ->slot('<i class="fas fa-download"></i> Download Image')
+            ->class($buttonClass . ' text-indigo-600 hover:text-indigo-800')
+            ->dispatch('download', ['rowId' => $row->id]);
+
+        return $buttons;
     }
 }

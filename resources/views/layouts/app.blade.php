@@ -14,12 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script async src="https://basicons.xyz/embed.js"> </script>
-    <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script>
-    <script type="module">
-        import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
-        Bugsnag.start({ apiKey: 'dcd5cc714204a416879cbd3d685160ef' })
-        BugsnagPerformance.start({ apiKey: 'dcd5cc714204a416879cbd3d685160ef' })
-    </script>
     <!-- Scripts -->
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])

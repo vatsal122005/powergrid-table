@@ -40,7 +40,7 @@ new #[Layout('layouts.guest')] class extends Component {
 
                 Log::debug('reCAPTCHA response', $recaptchaData);
 
-                if (!($recaptchaData['success'] ?? false) || ($recaptchaData['score'] ?? 0) < 0.1) {
+                if (!($recaptchaData['success'] ?? false) || ($recaptchaData['score'] ?? 0) < 0.5) {
                     $this->addError('recaptcha', 'reCAPTCHA verification failed. Please try again.');
                     Log::warning('reCAPTCHA failed', compact('email', 'ip', 'recaptchaData'));
                     return;

@@ -69,7 +69,7 @@ class LoginTest extends TestCase
         Log::shouldReceive('debug')->once();
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('recaptcha_token', 'valid-token')
             ->call('login')
@@ -109,7 +109,7 @@ class LoginTest extends TestCase
         ]);
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'wrongpassword')
             ->set('recaptcha_token', 'valid-token')
             ->call('login')
@@ -134,11 +134,11 @@ class LoginTest extends TestCase
         Log::shouldReceive('warning')->once();
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
-            ->set('recaptcha_token', 'invalid-token')
+            ->set('recaptcha_token', 'invalid_token')
             ->call('login')
-            ->assertHasErrors(['form.email' => 'reCAPTCHA verification failed. Please try again.']);
+            ->assertHasErrors(['recaptcha' => 'reCAPTCHA verification failed. Please try again.']);
 
         $this->assertGuest();
     }
@@ -159,11 +159,11 @@ class LoginTest extends TestCase
         Log::shouldReceive('warning')->once();
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
-            ->set('recaptcha_token', 'low-score-token')
+            ->set('recaptcha_token', 'low_score_token')
             ->call('login')
-            ->assertHasErrors(['form.email' => 'reCAPTCHA verification failed. Please try again.']);
+            ->assertHasErrors(['recaptcha' => 'reCAPTCHA verification failed. Please try again.']);
 
         $this->assertGuest();
     }
@@ -199,7 +199,7 @@ class LoginTest extends TestCase
         ]);
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', '')
             ->set('recaptcha_token', 'valid-token')
             ->call('login')
@@ -239,7 +239,7 @@ class LoginTest extends TestCase
         ]);
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('form.remember', true)
             ->set('recaptcha_token', 'valid-token')
@@ -249,7 +249,7 @@ class LoginTest extends TestCase
         $this->assertAuthenticated();
 
         // Check if remember token is set
-        $user = User::where('email', 'test@example.com')->first();
+        $user = User::where('email', 'josue17@example.org')->first();
         $this->assertNotNull($user->remember_token);
     }
 
@@ -266,7 +266,7 @@ class LoginTest extends TestCase
         $originalSessionId = Session::getId();
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('recaptcha_token', 'valid-token')
             ->call('login');
@@ -290,7 +290,7 @@ class LoginTest extends TestCase
             ->once();
 
         Log::shouldReceive('debug')
-            ->with('reCAPTCHA verification response', Mockery::type('array'))
+            ->with('reCAPTCHA response', Mockery::type('array'))
             ->once();
 
         Log::shouldReceive('info')
@@ -310,7 +310,7 @@ class LoginTest extends TestCase
             ->once();
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('recaptcha_token', 'valid-token')
             ->call('login');
@@ -327,7 +327,7 @@ class LoginTest extends TestCase
         ]);
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('recaptcha_token', 'test-token')
             ->call('login');
@@ -351,7 +351,7 @@ class LoginTest extends TestCase
         ]);
 
         Livewire::test('pages.auth.login')
-            ->set('form.email', 'test@example.com')
+            ->set('form.email', 'josue17@example.org')
             ->set('form.password', 'password123')
             ->set('recaptcha_token', 'valid-token')
             ->call('login')

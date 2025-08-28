@@ -3,74 +3,65 @@
 namespace Tests\Feature\Security;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class XssProtectionTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[Test]
     public function malicious_script_in_login_form_is_blocked()
     {
-        $maliciousEmail = '<script>alert("XSS")</script>@example.com';
+        Livewire::test('pages.auth.login')
+            ->set('form.email', '<script>alert("XSS")</script>@example.com')
+            ->set('form.password', 'password123')
+            ->call('login')
+            ->assertHasErrors(['form.email']);
 
-        $response = $this->post('/login', [
-            '_token' => csrf_token(),
-            'email' => $maliciousEmail,
-            'password' => 'password123',
-        ]);
-
-        // Should fail validation (invalid email format)
-        $response->assertSessionHasErrors(['email']);
         $this->assertGuest();
     }
 
     #[Test]
-    public function html_tags_in_input_are_escaped()
+    public function html_tags_in_input_are_escaped_in_livewire_component()
     {
         $user = User::factory()->create([
             'name' => '<script>alert("XSS")</script>John',
-            'email' => 'john@example.com',
+            'email' => 'john125@example.com',
             'password' => bcrypt('password123'),
         ]);
 
         $this->actingAs($user);
 
-        $response = $this->get('/dashboard');
-
-        // HTML should be escaped, not executed
-        $response->assertSee('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;John');
-        $response->assertDontSee('<script>alert("XSS")</script>');
+        Livewire::test('views.dashboard')
+            ->assertSee(htmlspecialchars($user->name, ENT_QUOTES))
+            ->assertDontSee('<script>alert("XSS")</script>');
     }
 
     #[Test]
-    public function security_headers_are_present()
+    public function security_headers_are_present_in_livewire_component()
     {
-        $response = $this->get('/login');
+        $component = Livewire::test('pages.auth.login');
 
-        $response->assertHeader('X-Content-Type-Options', 'nosniff');
-        $response->assertHeader('X-Frame-Options', 'DENY');
-        $response->assertHeader('X-XSS-Protection', '1; mode=block');
-        $response->assertHeaderMissing('Server'); // Hide server information
+        $component->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Frame-Options', 'DENY')
+            ->assertHeader('X-XSS-Protection', '1; mode=block')
+            ->assertHeaderMissing('Server');
     }
 
     #[Test]
-    public function content_security_policy_is_set()
+    public function content_security_policy_is_set_in_livewire_component()
     {
-        $response = $this->get('/login');
+        $component = Livewire::test('pages.auth.login');
 
-        $response->assertHeader('Content-Security-Policy');
+        $csp = $component->headers->get('Content-Security-Policy');
 
-        $csp = $response->headers->get('Content-Security-Policy');
-        $this->assertStringContains("default-src 'self'", $csp);
-        $this->assertStringContains("script-src 'self'", $csp);
-        $this->assertStringContains("object-src 'none'", $csp);
+        $this->assertStringContainsString("default-src 'self'", $csp);
+        $this->assertStringContainsString("script-src 'self'", $csp);
+        $this->assertStringContainsString("object-src 'none'", $csp);
     }
 
     #[Test]
-    public function javascript_injection_in_form_fields_is_prevented()
+    public function javascript_injection_in_form_fields_is_prevented_in_livewire_component()
     {
         $maliciousInputs = [
             'email' => 'javascript:alert("XSS")',
@@ -78,23 +69,21 @@ class XssProtectionTest extends TestCase
             'remember' => '<script>document.cookie="stolen"</script>',
         ];
 
-        $response = $this->post('/login', array_merge($maliciousInputs, [
-            '_token' => csrf_token(),
-        ]));
-
-        // Should fail validation
-        $response->assertSessionHasErrors();
-        $this->assertGuest();
+        Livewire::test('pages.auth.login')
+            ->set('form.email', $maliciousInputs['email'])
+            ->set('form.password', $maliciousInputs['password'])
+            ->set('form.remember', $maliciousInputs['remember'])
+            ->call('login')
+            ->assertHasErrors(['form.email', 'form.password', 'form.remember'])
+            ->assertGuest();
     }
 
     #[Test]
-    public function reflected_xss_is_prevented()
+    public function reflected_xss_is_prevented_in_livewire_component()
     {
-        // Attempt reflected XSS through URL parameters
-        $response = $this->get('/login?error=<script>alert("XSS")</script>');
+        $component = Livewire::test('pages.auth.login', ['error' => '<script>alert("XSS")</script>']);
 
-        // Script should be escaped in output
-        $response->assertDontSee('<script>alert("XSS")</script>', false);
-        $response->assertSee('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;', false);
+        $component->assertDontSee('<script>alert("XSS")</script>', false)
+            ->assertSee(htmlspecialchars('<script>alert("XSS")</script>', ENT_QUOTES));
     }
 }
