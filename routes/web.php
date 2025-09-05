@@ -34,4 +34,5 @@ Route::get('/test-error', [ErrorController::class, 'trigger']);
 
 Route::get('/user', UsersTable::class)->name('user');
 
-Route::resource('/user', UserController::class);
+Route::resource('/users', UserController::class);
+

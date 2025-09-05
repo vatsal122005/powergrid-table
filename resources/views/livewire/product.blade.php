@@ -13,12 +13,36 @@
                 @endif
 
                 {{-- Product Table --}}
-                <livewire:product-table lazy />
-                    <x-slot:placeholder>
-                        <!-- Skeleton Loader -->
-                        <p class="text-red-600">Loading Table Placeholder...</p>
-                    </x-slot:placeholder>
+                <div wire:init="loadProducts">
+                    @if($readyToLoad)
+                        <livewire:product-table />
+                    @else
+                        <div class="rounded-lg border border-gray-200 overflow-hidden shadow-sm animate-pulse">
+                            {{-- Table Header --}}
+                            <div class="bg-gray-100 px-4 py-3 flex space-x-6">
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                            </div>
+
+                            {{-- Table Rows --}}
+                            <div class="divide-y divide-gray-200">
+                                @for ($i = 0; $i < 6; $i++)
+                                    <div class="px-4 py-3 flex space-x-6">
+                                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mt-3 text-center">Loading products...</p>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-</div>

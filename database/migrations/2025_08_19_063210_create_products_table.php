@@ -17,6 +17,7 @@ return new class () extends Migration {
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('stock_quantity')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('sub_category_id')->nullable();
             $table->string('status')->default('active');
             $table->string('sku')->nullable();
             $table->string('image_url')->nullable();
@@ -25,8 +26,10 @@ return new class () extends Migration {
             $table->unsignedBigInteger('user_id');
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

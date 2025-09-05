@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73f4c0d39d85ffd18fa4f65bfb99eec2",
+    "content-hash": "952ef54209f002926f42e8848679eee1",
     "packages": [
         {
             "name": "brick/math",
@@ -4317,16 +4317,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.5.2",
+            "version": "v6.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "077c450626548cd8458eaf3525d997c42f6b4bf5"
+                "reference": "051e5e420b9290574e812eedce099ec740132b34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/077c450626548cd8458eaf3525d997c42f6b4bf5",
-                "reference": "077c450626548cd8458eaf3525d997c42f6b4bf5",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/051e5e420b9290574e812eedce099ec740132b34",
+                "reference": "051e5e420b9290574e812eedce099ec740132b34",
                 "shasum": ""
             },
             "require": {
@@ -4383,7 +4383,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.5.2"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.6.0"
             },
             "funding": [
                 {
@@ -4391,7 +4391,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-01T16:14:03+00:00"
+            "time": "2025-08-28T14:29:32+00:00"
         },
         {
             "name": "predis/predis",

@@ -415,6 +415,30 @@ npm update
 npm run build
 ```
 
+## 🆕 What's New
+
+- Soft delete support in `ProductTable`
+  - Datasource now includes soft-deleted rows via `withTrashed()`.
+  - Added `deleted_at` field to table data for state-aware actions.
+  - New row actions when a product is soft-deleted: Restore and Force Delete (with authorization checks and confirmation modals).
+  - Delete/Restore/Force Delete actions emit `deleteCompleted`, `restoreCompleted`, and `forceDeleteCompleted` events with success messages.
+
+- Filter improvements
+  - Category filter changed to `Filter::select` with a direct Eloquent data source.
+  - Sub-category filter now depends on selected categories and loads options dynamically based on `category_name` selection.
+
+- Action UI/UX updates
+  - Replaced icon font buttons with inline SVG icons and added tooltips.
+  - Unified button styling for better contrast and accessibility.
+
+- Safer delete flow
+  - Strongly typed `delete(int $rowId, bool $confirmed = false)`.
+  - Centralized confirmation dispatch payloads for delete/restore/force delete operations.
+
+Notes:
+- Ensure your `Product` model uses Laravel's `SoftDeletes` trait for the new soft delete features to work.
+- Authorization policies (`delete`, `restore`, `forceDelete`) must be defined in `ProductPolicy`.
+
 ---
 
 **Built with ❤️ using Laravel 12, Livewire 3, and Tailwind CSS**

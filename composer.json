@@ -18,7 +18,7 @@
         "mews/purifier": "^3.4",
         "openspout/openspout": "^4.30",
         "picqer/php-barcode-generator": "^3.2",
-        "power-components/livewire-powergrid": "^6.5",
+        "power-components/livewire-powergrid": "^6.6",
         "predis/predis": "^3.2"
     },
     "require-dev": {

@@ -158,13 +158,6 @@ return [
     'exports' => [
         'disk' => 'local', // Or 'public' if you want accessible URLs
         'path' => 'exports',
-
-        'queued' => [
-            'enabled' => true,    // 👈 turn queue on
-            'persist' => true,    // 👈 keep job info until file is downloaded
-            'connection' => null, // null = default queue connection
-            'queue' => null,      // null = default queue name
-        ],
     ],
 
     /*

@@ -58,6 +58,14 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
+        // ❌ Disallow viewing soft-deleted products for normal/admin users
+        if ($product->deleted_at !== null) {
+            // Only Super Admin can still view deleted records
+            return $this->isSuperAdmin($user)
+                ? Response::allow()
+                : Response::deny(__('messages.unauthorized'));
+        }
+
         if ($this->isSuperAdmin($user) || $this->isAdmin($user)) {
             return Response::allow();
         }
@@ -90,6 +98,10 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
+        if ($product->deleted_at !== null) {
+            return Response::deny(__('messages.unauthorized'));
+        }
+
         if ($this->isSuperAdmin($user) || $this->isAdmin($user)) {
             return Response::allow();
         }
@@ -106,6 +118,10 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
+        if ($product->deleted_at !== null) {
+            return Response::deny(__('messages.unauthorized'));
+        }
+
         if ($this->isSuperAdmin($user)) {
             return Response::allow();
         }
@@ -126,7 +142,11 @@ class ProductPolicy
      */
     public function restore(User $user, Product $product)
     {
-        return $this->isSuperAdmin($user)
+        if ($product->deleted_at === null) {
+            return Response::deny(__('messages.unauthorized'));
+        }
+
+        return ($this->isSuperAdmin($user) || $this->isAdmin($user))
             ? Response::allow()
             : Response::deny(__('messages.unauthorized'));
     }

@@ -13,7 +13,7 @@
                 document.addEventListener('DOMContentLoaded', function () {
                     let seconds = 5;
                     const timer = document.getElementById('redirect-timer');
-                    const interval = setInterval(() => {
+                    const interval = setInterval(function () {
                         seconds--;
                         if (timer) timer.textContent = seconds;
                         if (seconds <= 0) {
@@ -43,9 +43,9 @@
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                             Product Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="name" wire:model.debounce.300ms="name"
+                        <input type="text" id="name" wire:model.lazy="name"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                            placeholder="Enter product name" required>
+                            placeholder="Enter product name" >
                         @error('name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -86,7 +86,7 @@
                             <span class="absolute left-3 top-2 text-gray-500">$</span>
                             <input type="number" id="price" wire:model.lazy="price" step="0.01" min="0"
                                 class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('price') border-red-500 @enderror"
-                                placeholder="0.00" required>
+                                placeholder="0.00" >
                         </div>
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -99,7 +99,7 @@
                         </label>
                         <input type="number" id="stock_quantity" wire:model.lazy="stock_quantity" min="0"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('stock_quantity') border-red-500 @enderror"
-                            placeholder="0" required>
+                            placeholder="0" >
                         @error('stock_quantity')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -110,8 +110,7 @@
                             Status <span class="text-red-500">*</span>
                         </label>
                         <select id="status" wire:model="status"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('status') border-red-500 @enderror"
-                            required>
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('status') border-red-500 @enderror">
                             <option value="">Select status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -121,20 +120,17 @@
                         @enderror
                     </div>
                     <!-- Category -->
-                    <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
-                            Category
-                        </label>
-                        <select id="category_id" wire:model="category_id"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('category_id') border-red-500 @enderror">
-                            <option value="">Select a category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                    <div wire:ignore>
+                        <x-input-label for="category_id" :value="__('Category')" class="mb-2" />
+                        <x-select-2 id="category_id" name="category_id" wireModel="category_id" :options="$categories->map(fn($c) => ['id' => $c->id, 'text' => $c->name])->toArray()" placeholder="Select a Category" class="w-full" />
+                        <x-input-error :messages="$errors->get('category_id')" class="mt-1" />
+                    </div>
+
+                    <!-- Sub Category -->
+                    <div wire:ignore.self>
+                        <x-input-label for="sub_category_id" :value="__('Sub Category')" class="mb-2" />
+                        <x-select-2 id="sub_category_id" name="sub_category_id" wireModel="sub_category_id" :options="collect($filteredSubCategories)->map(fn($sc) => ['id' => $sc['id'], 'text' => $sc['name']])->toArray()"  placeholder="Select a Sub Category" class="w-full" />
+                        <x-input-error :messages="$errors->get('sub_category_id')" class="mt-1" />
                     </div>
                 </div>
 
@@ -190,8 +186,7 @@
                 <!-- Form Actions -->
                 <div class="flex justify-end space-x-4 pt-6 border-t">
                     <button type="button" wire:click="resetForm"
-                        class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        type="reset">
+                        class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         Reset
                     </button>
                     <button type="submit"
@@ -212,18 +207,3 @@
         @endcannot
     </div>
 </div>
-
-{{-- 
-    Error Review and Improvements:
-    1. @cannot('create') should specify the model: @cannot('create', App\Models\Product::class)
-    2. The script for redirect should be wrapped in DOMContentLoaded to avoid null timer.
-    3. Use wire:model.debounce.300ms instead of wire:model.live.debounce.300ms (no 'live' modifier in Livewire).
-    4. Use wire:model.lazy for description, price, and stock_quantity for better UX.
-    5. Add required attribute to required fields.
-    6. Add a default option for status select.
-    7. Check if $image is an object and has temporaryUrl() before calling it to avoid errors.
-    8. Add enctype="multipart/form-data" to form for file upload.
-    9. Add autocomplete="off" to prevent browser autofill issues.
-    10. The Reset button should have type="reset" for native reset behavior.
-    11. Improved accessibility and error handling.
---}}

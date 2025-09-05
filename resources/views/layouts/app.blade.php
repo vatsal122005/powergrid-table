@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script async src="https://basicons.xyz/embed.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- Scripts -->
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -38,6 +41,7 @@
         </main>
     </div>
     @livewireScripts
+    @stack('scripts')
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.22.3/sweetalert2.min.js"></script>
 <script>

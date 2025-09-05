@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'description',
         'price',
         'stock_quantity',
         'category_id',
+        'sub_category_id',
         'status',
         'sku',
         'image_url',
@@ -33,13 +36,18 @@ class Product extends Model
         'stock_quantity' => 0,
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function user()
+    public function subCategory()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SubCategory::class);
     }
 }

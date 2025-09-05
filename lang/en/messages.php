@@ -40,6 +40,7 @@ return [
     'login_failed' => '❌ Login failed. Wrong credentials, or maybe the keyboard betrayed you!',
     'logout_success' => '👋 You’ve been logged out. See you soon!',
     'unauthorized' => '🚫 You’re not allowed to do this. Nice try tho!',
+    'unauthenticated' => '🚫 You need to be logged in to do this. Try logging in again.',
     'account_created' => '🎉 Account created successfully. Welcome aboard!',
     'account_create_failed' => '😔 Could not create account. Tech gremlins at work.',
     'password_reset_sent' => '📧 Password reset email zooming to your inbox!',
@@ -84,6 +85,8 @@ return [
     'invalid_file_type' => '⚠️ Invalid file type. That doesn’t belong here!',
     'file_deleted' => '🗑️ File deleted successfully!',
     'file_delete_failed' => '❌ Could not delete file. It’s stuck!',
+    'barcode_not_found' => '🔎 No barcode found for this product. Maybe it’s a secret agent!',
+    'not_found' => '🙈 Sorry, we couldn’t find what you’re looking for. It might be hiding or never existed!',
 
     /*
     |--------------------------------------------------------------------------
@@ -100,6 +103,8 @@ return [
     'restore_failed' => '😬 Restore failed!',
     'force_delete_success' => '💀 Permanently deleted!',
     'force_delete_failed' => '❌ Could not permanently delete.',
+    'image_not_found' => '🖼️ Image not found. Maybe it went on vacation?',
+    'image_missing' => '🚫 Image file is missing. Did someone delete it?',
 
     /*
     |--------------------------------------------------------------------------
@@ -124,6 +129,10 @@ return [
     */
     'delete_confirm_title' => '⚠️ Warning!',
     'delete_confirm_message' => 'Are you sure you want to erase :name from existence?',
+    'restore_confirm_title' => '⚠️ Warning!',
+    'restore_confirm_message' => 'Are you sure you want to restore :name?',
+    'force_delete_confirm_title' => '⚠️ Warning!',
+    'force_delete_confirm_message' => 'Are you sure you want to permanently erase :name from existence?',
     'confirm_yes' => '👍 Yes, do it!',
     'confirm_cancel' => '🙅‍♂️ No, keep it!',
 ];
